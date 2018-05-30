@@ -5,12 +5,13 @@ import itertools
 
 def initArray(n):
     array = []
-    for i in range (0, n):
+    for i in range(0, n):
         array.append(0)
     return array
 
 def k_clique_communities(G, k):
     cliques=list(nx.find_cliques(G))
+    #print cliques
     num_of_cliques = len(cliques)
     #build a matrix
     matrix = []
@@ -46,59 +47,83 @@ def k_clique_communities(G, k):
                     thresh_row.append(0)
         thresh_matrix.append(thresh_row)
     
-    print("matrix: ", matrix, "\n")
-    print("thresh: ", thresh_matrix)
+    #print("matrix: ", matrix, "\n")
+    #print("thresh: ", thresh_matrix)
 
     #return the communities:
     M = nx.Graph()
     communities = []
+    flag = False
     for i in range (0, num_of_cliques):
         for j in range (i, num_of_cliques):
-            print("thresh_matrix[i][j] = ", thresh_matrix[i][j])
             if thresh_matrix[i][j] == 1:
-                for node_1 in cliques[i]:
-                    print(node_1)
-                    M.add_node(node_1)
-                    for node_2 in cliques[i]:
-                        M.add_edge(node_1, node_2)
+                for community in communities: 
+                    if (i in community):
+                        flag = True
+                        community.add(j)
+                        break
+                # in not in any community 
+                if (not flag):
+                    new_community = set()
+                    new_community.add(i)
+                    communities.append(new_community)
+                flag = False
 
-                        
+    #print communities
+    # merge the cliques of the communities
+    result = []
+    for community in communities:
+        new_set = set()
+        for clique_index in community:
+            clique = cliques[clique_index]
+            for node in clique:
+                new_set.add(node)
+        result.append(new_set)
+    return result
     
+                
     
-    nx.draw(M, node_color = color_map, with_labels = True, node_size=2000)
-    #return list(nx.connected_components(G))
 
 
-
+with open("communities_q2.txt") as file:
+    G = nx.Graph()
+    lines = [line.rstrip('\n') for line in file]
+    for line in lines:
+        edge = str(line).split(' ')
+        G.add_edge(edge[0], edge[1])
+    com = k_clique_communities(G, 9)
+    print type(com)
+    for i, c in enumerate(com):
+        print ("Community n.%d: %s" % (i+1, c))
 ######################TESTS#############################################
-G=nx.Graph()
-people = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}
+# G=nx.Graph()
+# people = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}
 
-G.add_edge(1, 2)
-G.add_edge(1, 3)
-G.add_edge(1, 4)
-G.add_edge(2, 4)
-G.add_edge(2, 3)
-G.add_edge(2, 5)
-G.add_edge(2, 6)
-G.add_edge(3, 10)
-G.add_edge(3, 9)
-G.add_edge(3,4)
-G.add_edge(4, 6)
-G.add_edge(4, 7)
-G.add_edge(4, 8)
-G.add_edge(4, 9)
-G.add_edge(4, 10)
-G.add_edge(5, 6)
-G.add_edge(6, 7)
-G.add_edge(6, 8)
-G.add_edge(6, 9)
-G.add_edge(6, 10)
-G.add_edge(7, 8)
-G.add_edge(8, 9)
-G.add_edge(8,10)
-G.add_edge(9, 10)
+# G.add_edge(1, 2)
+# G.add_edge(1, 3)
+# G.add_edge(1, 4)
+# G.add_edge(2, 4)
+# G.add_edge(2, 3)
+# G.add_edge(2, 5)
+# G.add_edge(2, 6)
+# G.add_edge(3, 10)
+# G.add_edge(3, 9)
+# G.add_edge(3,4)
+# G.add_edge(4, 6)
+# G.add_edge(4, 7)
+# G.add_edge(4, 8)
+# G.add_edge(4, 9)
+# G.add_edge(4, 10)
+# G.add_edge(5, 6)
+# G.add_edge(6, 7)
+# G.add_edge(6, 8)
+# G.add_edge(6, 9)
+# G.add_edge(6, 10)
+# G.add_edge(7, 8)
+# G.add_edge(8, 9)
+# G.add_edge(8,10)
+# G.add_edge(9, 10)
     
 
-#nx.draw(G, node_color = color_map, with_labels = True, node_size=2000)
-print("communities: ", k_clique_communities(G, 4))           
+# #nx.draw(G, node_color = color_map, with_labels = True, node_size=2000)
+# print("communities: ", k_clique_communities(G, 4))           
