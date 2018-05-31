@@ -124,6 +124,58 @@ G.add_edge(9, 10)
 print("doing something")
 with open("communities_q2.txt") as file:
     M = nx.Graph()
+    print("matrix: ", matrix, "\n")
+    print("thresh: ", thresh_matrix)
+
+    #return the communities:
+    M = nx.Graph()
+    #communities = []
+    for i in range (0, num_of_cliques):
+        for j in range (i, num_of_cliques):
+            #print("thresh_matrix[i][j] = ", thresh_matrix[i][j])
+            if thresh_matrix[i][j] == 1:
+                for node_1 in cliques[i]:
+                    M.add_node(node_1)
+                    for node_2 in cliques[i]:
+                        M.add_edge(node_1, node_2)
+
+                        
+    
+    
+    #nx.draw(M, node_color = color_map, with_labels = True, node_size=2000)
+    return list(nx.connected_components(M))
+
+
+# G=nx.Graph()
+# people = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}
+
+# G.add_edge(1, 2)
+# G.add_edge(1, 3)
+# G.add_edge(1, 4)
+# G.add_edge(2, 4)
+# G.add_edge(2, 3)
+# G.add_edge(2, 5)
+# G.add_edge(2, 6)
+# G.add_edge(3, 10)
+# G.add_edge(3, 9)
+# G.add_edge(3, 4)
+# G.add_edge(4, 6)
+# G.add_edge(4, 7)
+# G.add_edge(4, 8)
+# G.add_edge(4, 9)
+# G.add_edge(4, 10)
+# G.add_edge(5, 6)
+# G.add_edge(6, 7)
+# G.add_edge(6, 8)
+# G.add_edge(6, 9)
+# G.add_edge(6, 10)
+# G.add_edge(7, 8)
+# G.add_edge(8, 9)
+# G.add_edge(8,10)
+# G.add_edge(9, 10)
+    
+with open("communities_q2.txt") as file:
+    G = nx.Graph()
     lines = [line.rstrip('\n') for line in file]
     for line in lines:
         edge = str(line).split(' ')
