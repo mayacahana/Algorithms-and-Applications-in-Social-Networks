@@ -70,17 +70,9 @@ with open("communities_q2.txt") as file:
     for line in lines:
         edge = str(line).split(' ')
         G.add_edge(edge[0], edge[1])
-    # com = k_clique_communities(G, 9)
-    # print type(com)
-    # for i, c in enumerate(com):
-    #     print ("Community n.%d: %s" % (i+1, c))
-    # com_official = list(k_clique_communities_official(G, 9))
-    # for i, c in enumerate(com_official):
-    #     print ("Official Community n.%d: %s" % (i+1, c))
     print "================"
     max_comp = max(nx.connected_component_subgraphs(G), key=len)
     com = k_clique_communities(max_comp, 3)
-    print type(com)
     for i, c in enumerate(com):
         print ("Community n.%d: %s" % (i+1, list(c)))
     com_official = list(k_clique_communities_official(max_comp, 3))
