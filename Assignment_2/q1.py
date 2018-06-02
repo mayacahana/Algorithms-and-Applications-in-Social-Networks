@@ -5,6 +5,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import itertools
 from networkx.algorithms.community.centrality import girvan_newman as girvan_newman_official
+from networkx.algorithms.community import community 
 
 def remove_edges(G):
     #num_of_components = nx.number_connected_components(G)
